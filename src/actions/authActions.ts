@@ -1,36 +1,28 @@
 import { Dispatch } from 'react';
-import { AUTH_USER_FAIL, SET_AUTH_USER } from '../constants/authConstants';
+import {
+  AUTH_USER_FAIL,
+  LOGOUT_USER,
+  SET_AUTH_USER,
+} from '../constants/authConstants';
 import { ActionType } from '../types/ActionTypes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import axios from 'axios';
 
 export const setAuth = () => async (dispatch: Dispatch<ActionType>) => {
   try {
-    const FakeFetch = new Promise((resolve, reject) => {
-      setTimeout(() => {
-        resolve({
-          isAuthorized: true,
-          email: 'email@gmail.com',
-          password: '12345678q',
-          name: 'George',
-          img: 'https://cdn.icon-icons.com/icons2/2643/PNG/512/male_boy_person_people_avatar_icon_159358.png',
-        });
-      }, 1000);
-    });
 
-    // FAKE FETCHING
-    const response = await FakeFetch;
-
-    // SET DATA FROM SERVER TO AUTH STATE
+    const response = await axios.get('https://reqres.in/api/users/1');
+    const data = response.data.data;
+    
     dispatch({
       type: SET_AUTH_USER,
-      payload: response,
+      payload: data,
     });
 
     // SAVING AUTH DATA TO ASYNC STORAGE
-    const jsonValue = JSON.stringify(response);
+    const jsonValue = JSON.stringify(data);
     await AsyncStorage.setItem('@AuthData', jsonValue);
-
+    
   } catch (e: any) {
     dispatch({
       type: AUTH_USER_FAIL,
@@ -38,3 +30,7 @@ export const setAuth = () => async (dispatch: Dispatch<ActionType>) => {
     });
   }
 };
+
+export const logout = () => ({
+  type: LOGOUT_USER,
+});

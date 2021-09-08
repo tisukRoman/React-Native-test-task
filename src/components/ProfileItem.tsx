@@ -3,17 +3,18 @@ import { Text, View, Image, StyleSheet } from 'react-native';
 import { useSelector } from 'react-redux';
 import { AppState } from '../store';
 import { COLORS } from '../styles/colors';
+import { AuthState } from '../types/StateTypes';
 
 export const ProfileItem = () => {
-  const auth = useSelector((state: AppState) => state.auth);
+  const auth: AuthState = useSelector((state: AppState) => state.auth);
 
   return (
     <View style={styles.container}>
       <View style={styles.imageWrapper}>
-        <Image style={styles.image} source={{ uri: auth.img }} />
+        <Image style={styles.image} source={{ uri: auth.avatar ? auth.avatar : 'avatar' }} />
       </View>
       <View>
-        <Text style={styles.profileText}>Name: {auth.name}</Text>
+        <Text style={styles.profileText}>Name: {auth.first_name}</Text>
         <Text style={styles.profileText}>Email: {auth.email}</Text>
       </View>
     </View>

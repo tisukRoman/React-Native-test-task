@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Text, View, StyleSheet, Pressable, TextInput } from 'react-native';
+import { Text, View, StyleSheet, Pressable, TextInput, BackHandler, Alert } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAuth } from '../actions/authActions';
 import { COLORS } from '../styles/colors';
@@ -18,6 +18,7 @@ export const Login = () => {
   const [password, setPassword] = useState<string>('');
   const [emailWarning, setEmailWarning] = useState<string>('');
   const [passwordWarning, setPasswordWarning] = useState<string>('');
+  const [loading, setLoading] = useState<boolean>(false);
 
   const emailRegex =
     /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
@@ -28,7 +29,6 @@ export const Login = () => {
     setPasswordWarning('');
 
     // Validation Middlewares
-    debugger;
     if (!email) {
       setEmailWarning('Email field is required');
       return;
@@ -47,18 +47,25 @@ export const Login = () => {
     }
 
     // Finally
+    setLoading(true);
     dispatch(setAuth());
-    navigation.navigate('Main');
   };
+
+  useEffect(() => {
+    // NOT ALLOW USER USING BACK BUTTON
+    const backHandler = BackHandler.addEventListener('hardwareBackPress', ()=> true);
+    return () => backHandler.remove();
+  }, []);
 
   useEffect(() => {
     if (isAuthorized) {
       navigation.navigate('Main');
     }
-  }, [isAuthorized]);
+  }, [isAuthorized, navigation]);
 
   return (
     <View style={styles.screenWrapper}>
+      {loading && <Text>Loading...</Text>}
       <View style={styles.container}>
         <TextInput
           onChangeText={setEmail}

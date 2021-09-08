@@ -3,19 +3,31 @@ import thunk, { ThunkMiddleware } from 'redux-thunk';
 import { authReducer } from './reducers/authReducer';
 import { ActionType } from './types/ActionTypes';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { feedReducer } from './reducers/feedReducer';
 
 // ROOT REDUCER
 const rootReducer = combineReducers({
   auth: authReducer,
+  feed: feedReducer
 });
 
-const getData = async () => {
+// GET INITIAL AUTH DATA FROM ASYNC STORAGE
+const getAuthData = async () => {
   const jsonValue = await AsyncStorage.getItem('@AuthData');
-  return jsonValue != null ? JSON.parse(jsonValue) : null;
+  return jsonValue
+    ? JSON.parse(jsonValue)
+    : {
+        isAuthorized: false,
+        email: '',
+        password: '',
+        name: '',
+        img: '',
+      };
 };
 
+// INITIAL STATE
 const initialState = {
-    auth: getData()
+  auth: getAuthData(),
 };
 
 export type AppState = ReturnType<typeof rootReducer>; // AppState

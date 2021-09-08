@@ -1,0 +1,2 @@
+export const GET_FEED_ITEMS = 'GET_FEED_ITEMS'
+export const REFRESH_FEED_ITEMS = 'REFRESH_FEED_ITEMS'

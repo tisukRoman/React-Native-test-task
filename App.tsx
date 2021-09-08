@@ -13,10 +13,11 @@ export default function App() {
     <Provider store={store}>
       <NavigationContainer>
         <Stack.Navigator
-          initialRouteName='Login'
+          initialRouteName='Main'
           screenOptions={{
             headerShown: false,
           }}
+          
         >
           <Stack.Screen name='Login' component={Login} />
           <Stack.Screen name='Main' component={Main} />
